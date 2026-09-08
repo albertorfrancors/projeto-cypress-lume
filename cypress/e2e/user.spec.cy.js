@@ -1,13 +1,13 @@
 import userData from '../fixtures/userData.json'
-
+import LoginPage from '../pages/loginPage.js'
+import DashboardPage from '../pages/dashboardPage.js'
+import MenuPage from '../pages/menuPage.js'
+const loginPage = new LoginPage()
+const dashboardPage = new DashboardPage()
+const menuPage = new MenuPage()
 describe('template spec', () => {
 
   const selectorsList = {
-    usernameField: '[name="username"]',
-    passwordField: '[name="password"]',
-    loginButton: '[type="submit"]',
-    sectionTitleTopBar: '.oxd-topbar-header-breadcrumb-module',
-    wrongCredentialAlert: '[role="alert"]',
     myInfoButton: '[href="/web/index.php/pim/viewMyDetails"]',
     firstNameField: '[name="firstName"]',
     lastNameField: '[name="lastName"]',
@@ -18,13 +18,13 @@ describe('template spec', () => {
   }
 
   it.only("User Info Update - Success", () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userSuccess.username)
-    cy.get(selectorsList.passwordField).type(userData.userSuccess.password)
-    cy.get(selectorsList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorsList.sectionTitleTopBar).contains('Dashboard')
-    cy.get(selectorsList.myInfoButton).click()
+    loginPage.acessLoginPage()
+    loginPage.loginWithUser(userData.userSuccess.username, userData.userSuccess.password)
+
+    dashboardPage.checkDashboardPage()
+
+    menuPage.acessMyInfo()
+   
     cy.get(selectorsList.firstNameField).clear().type("FirstNameTest")
     cy.get(selectorsList.lastNameField).clear().type("LastNameTest")
     cy.get(selectorsList.genericField).eq(3).clear().type("Employee")
